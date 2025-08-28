@@ -1,0 +1,23 @@
+name: 静态资源构建
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deployJob:
+    name: deployJob
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: main }
+      - name: 打包编译
+        run: |
+          npm install
+          npm run build
+      - name: 静态资源部署
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
