@@ -14,7 +14,8 @@
     "@ngneat/falso": "^8.0.2",
     "@virtuoso.dev/message-list": "^1.13.3",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "threads": "^1.7.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.30.0",
