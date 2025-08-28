@@ -10,7 +10,7 @@ const defaultMeta = {
 export default defineConfig({
   plugins: [pluginReact()],
   output: {
-    assetPrefix: '/music/',
+    assetPrefix: '/ndzy-web/',
   },
   html: {
     title: 'web',
