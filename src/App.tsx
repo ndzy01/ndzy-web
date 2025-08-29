@@ -1,12 +1,36 @@
+import { useSetState } from 'ahooks';
 import './App.css';
 import LiveChat from './components/LiveChat';
 import WorkerDemo from './components/worker-demo';
 
+interface State {
+  showLiveChat: boolean;
+  showWorkerDemo: boolean;
+}
 const App = () => {
+  const [state, setState] = useSetState<State>({
+    showLiveChat: false,
+    showWorkerDemo: false,
+  });
+  const handleClick = (key: keyof State) => {
+    setState({ [key]: !state[key] } as Pick<State, keyof State>);
+  };
+  const handleText = (key: keyof State) => {
+    return state[key] ? '展示中' : '已隐藏';
+  };
+
   return (
     <>
-      <LiveChat />
-      <WorkerDemo />
+      <div style={{ padding: 16, display: 'flex', gap: 8 }}>
+        {(Object.keys(state) as Array<keyof State>).map((k, i) => (
+          <button key={i} onClick={() => handleClick(k)}>
+            {k} {handleText(k)}
+          </button>
+        ))}
+      </div>
+
+      {state.showLiveChat && <LiveChat />}
+      {state.showWorkerDemo && <WorkerDemo />}
     </>
   );
 };

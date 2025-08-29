@@ -61,10 +61,6 @@ function ComplexDemo() {
     setNumbers([]);
   };
 
-  const handleRemoveNumber = (index: number) => {
-    setNumbers(numbers.filter((_, i) => i !== index));
-  };
-
   useEffect(() => {
     if (!isReady || !execute) return;
 
@@ -81,22 +77,6 @@ function ComplexDemo() {
 
       <div style={{ marginBottom: '20px' }}>
         <h3>数字数组（共 {numbers.length} 个）：</h3>
-        {numbers.length > 100 && (
-          <div
-            style={{
-              padding: '8px 12px',
-              backgroundColor: '#e6f7ff',
-              border: '1px solid #91d5ff',
-              borderRadius: '4px',
-              marginBottom: '10px',
-              fontSize: '12px',
-              color: '#0050b3',
-            }}
-          >
-            💡 虚拟列表优化：即使有 {numbers.length}{' '}
-            个元素，也只渲染可见的部分，保持高性能
-          </div>
-        )}
         <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
           <button
             onClick={handleAddNumber}
@@ -153,12 +133,30 @@ function ComplexDemo() {
         </div>
       </div>
 
-      <div style={{ marginBottom: '20px' }}>
-        <h3>操作类型：</h3>
+      <div
+        style={{
+          marginBottom: '20px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '16px',
+          flexWrap: 'wrap',
+        }}
+      >
+        <h3 style={{ margin: 0, fontSize: '16px' }}>操作类型：</h3>
+
         <select
           value={operation}
           onChange={(e) => setOperation(e.target.value as any)}
-          style={{ padding: '5px', marginRight: '10px' }}
+          style={{
+            padding: '6px 12px',
+            marginTop: '6px',
+            borderRadius: '4px',
+            border: '1px solid #d9d9d9',
+            fontSize: '15px',
+            background: '#fff',
+            outline: 'none',
+            minWidth: '100px',
+          }}
         >
           <option value="sum">求和</option>
           <option value="multiply">相乘</option>
@@ -169,18 +167,61 @@ function ComplexDemo() {
           onClick={handleProcess}
           disabled={!isReady || !execute || loading || numbers.length === 0}
           style={{
-            padding: '10px 20px',
-            backgroundColor: isReady && execute ? '#007acc' : '#ccc',
-            color: 'white',
+            padding: '10px 24px',
+            backgroundColor:
+              isReady && execute && numbers.length > 0 && !loading
+                ? '#007acc'
+                : '#e0e0e0',
+            color:
+              isReady && execute && numbers.length > 0 && !loading
+                ? 'white'
+                : '#888',
             border: 'none',
             borderRadius: '4px',
-            cursor: isReady && execute ? 'pointer' : 'not-allowed',
+            cursor:
+              isReady && execute && numbers.length > 0 && !loading
+                ? 'pointer'
+                : 'not-allowed',
+            fontWeight: 500,
+            fontSize: '15px',
+            transition: 'background 0.2s',
           }}
         >
           {loading ? '处理中...' : '执行计算'}
         </button>
-        <button onClick={handleTerminate}>销毁</button>
-        <button onClick={initWorker}>重启</button>
+
+        <button
+          onClick={handleTerminate}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: '#ff7875',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontWeight: 500,
+            fontSize: '15px',
+            transition: 'background 0.2s',
+          }}
+        >
+          销毁
+        </button>
+        <button
+          onClick={initWorker}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: '#36cfc9',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontWeight: 500,
+            fontSize: '15px',
+            transition: 'background 0.2s',
+          }}
+        >
+          启动
+        </button>
       </div>
 
       {result !== null && (
@@ -217,7 +258,7 @@ function ComplexDemo() {
       )}
 
       <div style={{ marginTop: '20px', fontSize: '14px', color: '#666' }}>
-        Worker 状态: {isReady ? '✅ 就绪' : '⏳ 初始化中...'}
+        Worker 状态: {isReady ? '✅ 就绪' : '⏳ 未启动'}
       </div>
     </div>
   );
