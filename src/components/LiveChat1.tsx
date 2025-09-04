@@ -44,7 +44,7 @@ export default function App() {
   const virtuoso = useRef<any>(null);
 
   const [data, setData] = useState<{ data: Message[] }>(() => ({
-    data: [],
+    data: Array.from({ length: 50 }, () => randomMessage()),
   }));
 
   useEffect(() => {
@@ -57,28 +57,8 @@ export default function App() {
           newData.length > 500 ? newData.slice(newData.length - 500) : newData;
         return {
           data: limitedData,
-          // ...(listRef.current?.getScrollLocation().isAtBottom
-          //   ? {
-          //       scrollModifier: {
-          //         type: 'auto-scroll-to-bottom',
-          //         autoScroll: () => {
-          //           return {
-          //             index: 'LAST',
-          //             align: 'start-no-overflow',
-          //             behavior: 'smooth',
-          //           };
-          //         },
-          //       },
-          //     }
-          //   : {}),
         };
       });
-      // if (!virtuoso.current) return;
-      // virtuoso.current.scrollToIndex({
-      //   index: 999,
-      //   align: 'end',
-      //   behavior: 'smooth',
-      // });
     }, 1000);
 
     return () => clearInterval(interval);
@@ -89,7 +69,7 @@ export default function App() {
       alignToBottom
       ref={virtuoso}
       style={{
-        height: 200,
+        height: 800,
       }}
       followOutput={(isAtBottom) => {
         if (isAtBottom) {
@@ -99,8 +79,8 @@ export default function App() {
         return false;
       }}
       data={data.data}
-      computeItemKey={(index, data) => data.key}
-      itemContent={(index, data) => <ItemContent key={index} data={data} />}
+      computeItemKey={(_index, data) => data.key}
+      itemContent={(index, data) => <ItemContent key={data.key} data={data} />}
     />
   );
 }
