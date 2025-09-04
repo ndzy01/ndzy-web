@@ -2,14 +2,17 @@ import { useSetState } from 'ahooks';
 import './App.css';
 import LiveChat from './components/LiveChat';
 import WorkerDemo from './components/worker-demo';
+import LiveChat1 from './components/LiveChat1';
 
 interface State {
   showLiveChat: boolean;
+  showLiveChat1: boolean;
   showWorkerDemo: boolean;
 }
 const App = () => {
   const [state, setState] = useSetState<State>({
     showLiveChat: false,
+    showLiveChat1: false,
     showWorkerDemo: false,
   });
   const handleClick = (key: keyof State) => {
@@ -30,6 +33,7 @@ const App = () => {
       </div>
 
       {state.showLiveChat && <LiveChat />}
+      {state.showLiveChat1 && <LiveChat1 />}
       {state.showWorkerDemo && <WorkerDemo />}
     </>
   );
