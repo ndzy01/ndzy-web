@@ -24,7 +24,17 @@ const App = () => {
 
   return (
     <>
-      <div style={{ padding: 16, display: 'flex', gap: 8 }}>
+      <div
+        style={{
+          padding: 16,
+          display: 'flex',
+          gap: 8,
+          '--border-width': '8px',
+          '--border-radius': '24px',
+          height: 36,
+        }}
+        className="border-box"
+      >
         {(Object.keys(state) as Array<keyof State>).map((k, i) => (
           <button key={i} onClick={() => handleClick(k)}>
             {k} {handleText(k)}
