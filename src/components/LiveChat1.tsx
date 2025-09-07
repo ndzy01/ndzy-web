@@ -80,7 +80,7 @@ export default function App() {
       }}
       data={data.data}
       computeItemKey={(_index, data) => data.key}
-      itemContent={(index, data) => <ItemContent key={data.key} data={data} />}
+      itemContent={(_index, data) => <ItemContent key={data.key} data={data} />}
     />
   );
 }
