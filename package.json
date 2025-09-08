@@ -14,6 +14,7 @@
     "@ngneat/falso": "^8.0.2",
     "@virtuoso.dev/message-list": "^1.13.3",
     "ahooks": "^3.9.4",
+    "rc-dialog": "^10.0.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-virtuoso": "^4.14.0",
