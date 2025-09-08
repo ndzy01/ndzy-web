@@ -52,6 +52,7 @@ const App = () => {
       <button onClick={() => setState({ openDialog: true })}>打开对话框</button>
       {state.openDialog && (
         <Dialog
+          prefixCls="lr-dialog"
           title={'111'}
           onClose={() => setState({ openDialog: false })}
           visible={state.openDialog}
