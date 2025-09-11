@@ -17,6 +17,12 @@ export default defineConfig({
           skipWaiting: true,
           maximumFileSizeToCacheInBytes: 500 * 1024 * 1024,
           cleanupOutdatedCaches: true,
+          additionalManifestEntries: [
+            {
+              url: `https://www.ndzy01.com/ndzy-web/version.json`,
+              revision: 'v-5.0.0',
+            },
+          ],
           exclude: [/\.html$/, /\.txt$/, /\.js$/],
           importScripts: ['cache-handler.js'],
         }),
