@@ -20,7 +20,7 @@ export default defineConfig({
           additionalManifestEntries: [
             {
               url: `https://www.ndzy01.com/ndzy-web/version.json`,
-              revision: 'v-5.0.0',
+              revision: 'v-5.0.1',
             },
           ],
           exclude: [/\.html$/, /\.txt$/, /\.js$/],
