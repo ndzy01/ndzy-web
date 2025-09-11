@@ -60,10 +60,10 @@ class CacheManager {
     if (!cachedResponse) {
       // 查找 revision
       const url = request.url;
-      const giftList = getData();
-      const gift = giftList.find((g) => g.url === url);
-      if (gift && gift.revision) {
-        const cacheUrl = `${url}${url.includes('?') ? '&' : '?'}rev=${gift.revision}`;
+      const resourceList = getData();
+      const resource = resourceList.find((r) => r.url === url);
+      if (resource && resource.revision) {
+        const cacheUrl = `${url}${url.includes('?') ? '&' : '?'}rev=${resource.revision}`;
         cachedResponse = await cache.match(
           new Request(cacheUrl, { method: request.method }),
         );
@@ -79,16 +79,16 @@ class CacheManager {
     return networkResponse;
   }
 
-  // 预缓存礼物资源 - 串行版本 (一个完成再加载下一个)
-  async precacheGiftResources(giftList) {
-    console.log(`开始串行预缓存 ${giftList.length} 个资源...`);
+  // 预缓存资源 - 串行版本 (一个完成再加载下一个)
+  async precacheResources(resourceList) {
+    console.log(`开始串行预缓存 ${resourceList.length} 个资源...`);
 
     const cache = await caches.open(CACHE_NAMES.PRECACHE_KEY);
-    for (let i = 0; i < giftList.length; i++) {
-      const gift = giftList[i];
-      if (gift.url && gift.revision && gift.hash) {
+    for (let i = 0; i < resourceList.length; i++) {
+      const resource = resourceList[i];
+      if (resource.url && resource.revision && resource.hash) {
         // 用 revision 拼接到 url 上，作为唯一 key
-        const cacheUrl = `${gift.url}${gift.url.includes('?') ? '&' : '?'}rev=${gift.revision}`;
+        const cacheUrl = `${resource.url}${resource.url.includes('?') ? '&' : '?'}rev=${resource.revision}`;
         // 检查是否已缓存
         const cached = await cache.match(new Request(cacheUrl));
         if (cached) {
@@ -97,13 +97,13 @@ class CacheManager {
         }
         try {
           console.log(
-            `正在加载第 ${i + 1}/${giftList.length} 个资源: ${cacheUrl}`,
+            `正在加载第 ${i + 1}/${resourceList.length} 个资源: ${cacheUrl}`,
           );
           const response = await fetch(cacheUrl);
           if (response.ok) {
             const arrayBuffer = await response.clone().arrayBuffer();
             const hash = await this.calculateHash(arrayBuffer);
-            if (hash === gift.hash) {
+            if (hash === resource.hash) {
               await cache.put(new Request(cacheUrl), response);
               console.log(`✅ 第 ${i + 1} 个资源缓存完成（hash校验通过）`);
             } else {
@@ -111,7 +111,7 @@ class CacheManager {
                 `❌ 第 ${i + 1} 个资源 hash 校验失败:`,
                 hash,
                 '!=',
-                gift.hash,
+                resource.hash,
               );
             }
           } else {
@@ -155,14 +155,14 @@ class CacheManager {
 
     // 获取最新 revision 列表
     const latestList = getData();
-    const latestRevisions = new Set(latestList.map((g) => g.revision));
+    const latestRevisions = new Set(latestList.map((r) => r.revision));
 
     let deleted = 0;
     for (const request of cacheKeys) {
       const url = request.url.split('?rev=')[0]; // 去掉 rev 参数
       const revMatch = request.url.match(/[?&]rev=([^&]+)/);
       const rev = revMatch ? revMatch[1] : null;
-      const existsInLatest = latestList.some((g) => g.url === url);
+      const existsInLatest = latestList.some((r) => r.url === url);
 
       // 删除：1. 没有 rev；2. rev 不是最新；3. url 不在最新列表
       if (!rev || !latestRevisions.has(rev) || !existsInLatest) {
@@ -192,7 +192,7 @@ self.addEventListener('install', (event) => {
 
 const handleCache = async () => {
   const res = getData();
-  await cacheManager.precacheGiftResources(res);
+  await cacheManager.precacheResources(res);
   await self.clients.claim();
 };
 
