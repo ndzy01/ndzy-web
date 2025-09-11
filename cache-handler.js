@@ -136,7 +136,7 @@ class CacheManager {
    * 清理旧缓存
    */
   async cleanupOldCache() {
-    console.log('开始清理旧缓存...');
+    console.log('开始清理缓存key级别旧缓存...');
     const cacheNames = await caches.keys();
     await Promise.all(
       cacheNames.map((name) => {
