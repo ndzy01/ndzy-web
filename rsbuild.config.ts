@@ -17,7 +17,7 @@ export default defineConfig({
           skipWaiting: true,
           maximumFileSizeToCacheInBytes: 500 * 1024 * 1024,
           cleanupOutdatedCaches: true,
-          exclude: [/\.html$/],
+          exclude: [/\.html$/, /\.txt$/],
           importScripts: ['cache-handler.js'],
         }),
       ],
