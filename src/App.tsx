@@ -60,6 +60,17 @@ const App = () => {
           <p>first dialog</p>
         </Dialog>
       )}
+
+      <button
+        onClick={() => {
+          navigator.serviceWorker.controller?.postMessage({
+            type: 'PRECACHE_RESOURCES',
+            data: {},
+          });
+        }}
+      >
+        点击我
+      </button>
     </>
   );
 };

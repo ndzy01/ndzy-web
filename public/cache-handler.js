@@ -9,10 +9,10 @@ const getData = () => {
   return [
     {
       id: 36,
-      url: "https://www.ndzy01.com/music1/music/sx/36_d3ee1b9c-b7b8-4d45-8286-c5556398ff8c.flac",
+      url: "https://www.rose.love/common_resources/font/base.woff2",
       name: "凤凰传奇 - 奢香夫人",
       revision: "v-2025-03-30",
-      hash: "4acac0e1644e508346705b476e6262a225b5529e0a5c13230aee8c378d6ff5de", // 示例 hash
+      hash: "649b150a3d276e172fadb0c3e82d41b80ec4dee071603600f8e4521ea35b4d16", // 示例 hash
     },
   ].map((d) => ({
     url: d.url,
