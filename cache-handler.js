@@ -1,8 +1,9 @@
 // 缓存版本号
 const CACHE_VERSION = 'v3';
+const CACHE_NAME = 'ndzy-cache';
 // 缓存名称
 const CACHE_NAMES = {
-  NDZY: `ndzy-cache-${CACHE_VERSION}`,
+  PRECACHE_KEY: `${CACHE_NAME}-${CACHE_VERSION}`,
 };
 
 // 获取资源列表并加上 revision 字段（如 data.json 里有 revision 字段）
@@ -52,7 +53,7 @@ class CacheManager {
 
   // 通用资源处理
   async handleGenericResource(request) {
-    const cache = await caches.open(CACHE_NAMES.NDZY);
+    const cache = await caches.open(CACHE_NAMES.PRECACHE_KEY);
     let cachedResponse = await cache.match(request);
 
     // 如果没命中，尝试用带 revision 的 url 匹配
@@ -82,7 +83,7 @@ class CacheManager {
   async precacheGiftResources(giftList) {
     console.log(`开始串行预缓存 ${giftList.length} 个资源...`);
 
-    const cache = await caches.open(CACHE_NAMES.NDZY);
+    const cache = await caches.open(CACHE_NAMES.PRECACHE_KEY);
     for (let i = 0; i < giftList.length; i++) {
       const gift = giftList[i];
       if (gift.url && gift.revision && gift.hash) {
@@ -135,9 +136,23 @@ class CacheManager {
    * 清理旧缓存
    */
   async cleanupOldCache() {
+    console.log('开始清理旧缓存...');
+    // 只保留 CACHE_NAMES.PRECACHE_KEY 版本的缓存 旧的版本删除
+    const cacheNames = await caches.keys();
+    await Promise.all(
+      cacheNames.map((name) => {
+        if (name.includes(CACHE_NAME) && name !== CACHE_NAMES.PRECACHE_KEY) {
+          console.log(`删除旧缓存: ${name}`);
+          return caches.delete(name);
+        }
+        return Promise.resolve();
+      }),
+    );
+
+    // 资源级别缓存清理
     console.log('开始清理资源级别缓存...');
-    const ndzyCache = await caches.open(CACHE_NAMES.NDZY);
-    const ndzyKeys = await ndzyCache.keys();
+    const cache = await caches.open(CACHE_NAMES.PRECACHE_KEY);
+    const cacheKeys = await cache.keys();
 
     // 获取最新 revision 列表
     const latestList = getData();
@@ -145,22 +160,22 @@ class CacheManager {
 
     // 删除不是最新 revision 的资源
     let deleted = 0;
-    for (const request of ndzyKeys) {
+    for (const request of cacheKeys) {
       const url = request.url;
       const revMatch = url.match(/[?&]rev=([^&]+)/);
       const rev = revMatch ? revMatch[1] : null;
       if (!rev || !latestRevisions.has(rev)) {
-        await ndzyCache.delete(request);
+        await cache.delete(request);
         deleted++;
       }
     }
 
     // 删除不存在于最新列表的资源
-    for (const request of ndzyKeys) {
+    for (const request of cacheKeys) {
       const url = request.url.split('?rev=')[0]; // 去掉 rev 参数
       const existsInLatest = latestList.some((g) => g.url === url);
       if (!existsInLatest) {
-        await ndzyCache.delete(request);
+        await cache.delete(request);
         deleted++;
       }
     }
