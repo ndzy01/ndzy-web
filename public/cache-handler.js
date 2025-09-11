@@ -165,7 +165,7 @@ class CacheManager {
       }
     }
 
-    console.log(`清理了 ${deleted} 个旧版本资源缓存`);
+    console.log(`清理了 ${deleted} 个旧版本资源缓存或无效资源.`);
   }
 }
 
