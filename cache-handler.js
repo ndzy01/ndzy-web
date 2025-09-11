@@ -1,5 +1,5 @@
 // 缓存版本号
-const CACHE_VERSION = 'v4';
+const CACHE_VERSION = 'v5';
 const CACHE_NAME = 'ndzy-cache';
 // 缓存名称
 const CACHE_NAMES = {
