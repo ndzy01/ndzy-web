@@ -1,5 +1,5 @@
 // 缓存版本号
-const CACHE_VERSION = 'v3';
+const CACHE_VERSION = 'v4';
 const CACHE_NAME = 'ndzy-cache';
 // 缓存名称
 const CACHE_NAMES = {
@@ -11,7 +11,7 @@ const getData = () => {
   return [
     {
       url: 'https://www.rose.love/common_resources/font/base.woff2',
-      revision: 'v-2025-09-11',
+      revision: 'v-2025-09-12',
       hash: '649b150a3d276e172fadb0c3e82d41b80ec4dee071603600f8e4521ea35b4d16', // 示例 hash
     },
   ].map((d) => ({
@@ -137,7 +137,6 @@ class CacheManager {
    */
   async cleanupOldCache() {
     console.log('开始清理旧缓存...');
-    // 只保留 CACHE_NAMES.PRECACHE_KEY 版本的缓存 旧的版本删除
     const cacheNames = await caches.keys();
     await Promise.all(
       cacheNames.map((name) => {
@@ -158,23 +157,15 @@ class CacheManager {
     const latestList = getData();
     const latestRevisions = new Set(latestList.map((g) => g.revision));
 
-    // 删除不是最新 revision 的资源
     let deleted = 0;
     for (const request of cacheKeys) {
-      const url = request.url;
-      const revMatch = url.match(/[?&]rev=([^&]+)/);
-      const rev = revMatch ? revMatch[1] : null;
-      if (!rev || !latestRevisions.has(rev)) {
-        await cache.delete(request);
-        deleted++;
-      }
-    }
-
-    // 删除不存在于最新列表的资源
-    for (const request of cacheKeys) {
       const url = request.url.split('?rev=')[0]; // 去掉 rev 参数
+      const revMatch = request.url.match(/[?&]rev=([^&]+)/);
+      const rev = revMatch ? revMatch[1] : null;
       const existsInLatest = latestList.some((g) => g.url === url);
-      if (!existsInLatest) {
+
+      // 删除：1. 没有 rev；2. rev 不是最新；3. url 不在最新列表
+      if (!rev || !latestRevisions.has(rev) || !existsInLatest) {
         await cache.delete(request);
         deleted++;
       }
