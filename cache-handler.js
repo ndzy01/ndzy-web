@@ -1,5 +1,5 @@
 // 缓存版本号
-const CACHE_VERSION = 'v5';
+const CACHE_VERSION = 'v6';
 const CACHE_NAME = 'ndzy-cache';
 // 缓存名称
 const CACHE_NAMES = {
@@ -11,7 +11,7 @@ const getData = () => {
   return [
     {
       url: 'https://www.rose.love/common_resources/font/base.woff2',
-      revision: 'v-2025-09-12',
+      revision: 'v-2025-09-11',
       hash: '649b150a3d276e172fadb0c3e82d41b80ec4dee071603600f8e4521ea35b4d16', // 示例 hash
     },
   ].map((d) => ({
