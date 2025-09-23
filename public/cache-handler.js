@@ -258,7 +258,7 @@ class CacheManager {
     const cacheKeys = await cache.keys();
 
     // 获取最新 revision 列表
-    const latestList = this.getData();
+    const latestList = await this.getData();
     const latestRevisions = new Set(latestList.map((r) => r.revision));
 
     let deleted = 0;
@@ -300,7 +300,7 @@ self.addEventListener('install', (event) => {
  * 处理资源预缓存
  */
 const handleCache = async () => {
-  const res = cacheManager.getData();
+  const res = await cacheManager.getData();
   await cacheManager.precacheResources(res);
 };
 
