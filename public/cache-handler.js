@@ -6,28 +6,68 @@ const CACHE_NAMES = {
   PRECACHE_KEY: `${CACHE_NAME}-${CACHE_VERSION}`,
 };
 
-// 获取资源列表并加上 revision 字段（如 data.json 里有 revision 字段）
-const getData = () => {
-  return [
-    {
-      url: 'https://www.rose.love/common_resources/font/base.woff2',
-      revision: 'v-2025-09-11',
-      hash: '649b150a3d276e172fadb0c3e82d41b80ec4dee071603600f8e4521ea35b4d16', // 示例 hash
-    },
-  ].map((d) => ({
-    url: d.url,
-    revision: d.revision,
-    hash: d.hash,
-  }));
-};
-
-// 简化的缓存管理器
+/**
+ * CacheManager 类负责管理缓存，包括预缓存资源、处理请求、清理旧缓存等功能。
+ */
 class CacheManager {
   constructor() {
-    this.pendingRequests = new Map(); // 防重复请求
+    /**
+     * pendingRequests 用于存储正在进行的请求，防止重复请求。
+     */
+    this.pendingRequests = new Map();
+
+    /**
+     * maxRetries 请求失败时的最大重试次数。
+     */
+    this.maxRetries = 3;
+
+    /**
+     * retryDelay 基础重试延迟，重试时会指数级增加（指数退避）。
+     */
+    this.retryDelay = 1000;
+
+    /**
+     * resourceMap 存储资源的 URL 到资源对象的映射，方便快速查找。
+     */
+    this.resourceMap = new Map();
+
+    this.initialize();
   }
 
-  // 单点控制 - 防重复请求
+  /**
+   * 初始化资源映射表
+   */
+  async initialize() {
+    const resourceList = await this.getData();
+    for (const resource of resourceList) {
+      this.resourceMap.set(resource.url, resource);
+    }
+  }
+
+  /**
+   * 获取资源列表
+   * @returns {Array<{url: string, revision: string, hash: string}>} 资源列表
+   */
+  async getData() {
+    return [
+      {
+        url: 'https://www.rose.love/common_resources/font/base.woff2',
+        revision: 'v-2025-09-11',
+        hash: '649b150a3d276e172fadb0c3e82d41b80ec4dee071603600f8e4521ea35b4d16', // 示例 hash
+      },
+    ].map((d) => ({
+      url: d.url,
+      revision: d.revision,
+      hash: d.hash,
+    }));
+  }
+
+  /**
+   * 单点控制 - 防重复请求
+   * @param {string} key
+   * @param {Function} requestFn
+   * @returns {Promise}
+   */
   async singleFlight(key, requestFn) {
     if (this.pendingRequests.has(key)) {
       return this.pendingRequests.get(key);
@@ -41,7 +81,11 @@ class CacheManager {
     return promise;
   }
 
-  // 处理请求 - 简化版本
+  /**
+   * 处理请求
+   * @param {Request} request
+   * @returns {Promise<Response>}
+   */
   async processRequest(request) {
     const url = request.url;
     const requestKey = `${request.method}:${url}`;
@@ -51,7 +95,11 @@ class CacheManager {
     });
   }
 
-  // 通用资源处理
+  /**
+   * 处理通用资源请求
+   * @param {Request} request
+   * @returns {Promise<Response>}
+   */
   async handleGenericResource(request) {
     const cache = await caches.open(CACHE_NAMES.PRECACHE_KEY);
     let cachedResponse = await cache.match(request);
@@ -60,8 +108,7 @@ class CacheManager {
     if (!cachedResponse) {
       // 查找 revision
       const url = request.url;
-      const resourceList = getData();
-      const resource = resourceList.find((r) => r.url === url);
+      const resource = this.resourceMap.get(url);
       if (resource && resource.revision) {
         const cacheUrl = `${url}${url.includes('?') ? '&' : '?'}rev=${resource.revision}`;
         cachedResponse = await cache.match(
@@ -79,7 +126,10 @@ class CacheManager {
     return networkResponse;
   }
 
-  // 预缓存资源 - 串行版本 (一个完成再加载下一个)
+  /**
+   * 预缓存资源
+   * @param {Array<{url: string, revision: string, hash: string}>} resourceList 资源列表
+   */
   async precacheResources(resourceList) {
     console.log(`开始串行预缓存 ${resourceList.length} 个资源...`);
 
@@ -99,7 +149,7 @@ class CacheManager {
           console.log(
             `正在加载第 ${i + 1}/${resourceList.length} 个资源: ${cacheUrl}`,
           );
-          const response = await fetch(cacheUrl);
+          const response = await this.retryFetch(cacheUrl);
           if (response.ok) {
             const arrayBuffer = await response.clone().arrayBuffer();
             const hash = await this.calculateHash(arrayBuffer);
@@ -115,17 +165,71 @@ class CacheManager {
               );
             }
           } else {
-            console.warn(`❌ 第 ${i + 1} 个资源下载失败`);
+            console.warn(
+              `❌ 第 ${i + 1} 个资源下载失败，状态码: ${response.status}`,
+            );
           }
         } catch (error) {
-          console.warn(`❌ 第 ${i + 1} 个资源加载失败:`, error);
+          console.warn(
+            `❌ 第 ${i + 1} 个资源加载失败（重试 ${this.maxRetries} 次后）:`,
+            error.message,
+          );
         }
       }
     }
     console.log('🎉 所有资源预缓存完成!');
   }
 
-  // 计算 ArrayBuffer 的 SHA-256 hash，返回 hex 字符串
+  /**
+   * 带重试机制的fetch请求
+   * @param {string} url
+   * @param {any} options
+   * @param {number} retryCount
+   * @returns {Promise<Response>}
+   */
+  async retryFetch(url, options = {}, retryCount = 0) {
+    try {
+      const response = await fetch(url, options);
+
+      // 如果是4xx状态码，不重试
+      if (response.status >= 400 && response.status < 500) {
+        return response;
+      }
+
+      // 如果是5xx状态码或网络错误，进行重试
+      if (!response.ok && retryCount < this.maxRetries) {
+        const delay = this.retryDelay * Math.pow(2, retryCount);
+        console.warn(`第 ${retryCount + 1} 次重试 ${url}，延迟 ${delay}ms`);
+
+        await new Promise((resolve) => setTimeout(resolve, delay));
+        return this.retryFetch(url, options, retryCount + 1);
+      }
+
+      return response;
+    } catch (error) {
+      // 网络错误，进行重试
+      if (retryCount < this.maxRetries) {
+        const delay = this.retryDelay * Math.pow(2, retryCount);
+        console.warn(
+          `第 ${retryCount + 1} 次重试 ${url}（网络错误），延迟 ${delay}ms`,
+        );
+
+        await new Promise((resolve) => setTimeout(resolve, delay));
+        return this.retryFetch(url, options, retryCount + 1);
+      }
+
+      // 达到最大重试次数，抛出错误
+      throw new Error(
+        `请求失败: ${url}，重试 ${this.maxRetries} 次后仍然失败: ${error.message}`,
+      );
+    }
+  }
+
+  /**
+   * 计算 ArrayBuffer 的 SHA-256 hash
+   * @param {ArrayBuffer} arrayBuffer
+   * @returns {Promise<string>}
+   */
   async calculateHash(arrayBuffer) {
     const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
@@ -154,7 +258,7 @@ class CacheManager {
     const cacheKeys = await cache.keys();
 
     // 获取最新 revision 列表
-    const latestList = getData();
+    const latestList = this.getData();
     const latestRevisions = new Set(latestList.map((r) => r.revision));
 
     let deleted = 0;
@@ -162,7 +266,7 @@ class CacheManager {
       const url = request.url.split('?rev=')[0]; // 去掉 rev 参数
       const revMatch = request.url.match(/[?&]rev=([^&]+)/);
       const rev = revMatch ? revMatch[1] : null;
-      const existsInLatest = latestList.some((r) => r.url === url);
+      const existsInLatest = this.resourceMap.has(url);
 
       // 删除：1. 没有 rev；2. rev 不是最新；3. url 不在最新列表
       if (!rev || !latestRevisions.has(rev) || !existsInLatest) {
@@ -178,27 +282,36 @@ class CacheManager {
 // 全局缓存管理器实例
 const cacheManager = new CacheManager();
 
+/**
+ * 清理缓存
+ */
 const handleClear = async () => {
   // 资源级别缓存清理
   await cacheManager.cleanupOldCache();
 };
 
-// Service Worker 事件监听
-// install 阶段只做清理缓存
+// install 阶段预缓存资源
 self.addEventListener('install', (event) => {
   self.skipWaiting();
-  event.waitUntil(handleClear());
+  event.waitUntil(handleCache());
 });
 
+/**
+ * 处理资源预缓存
+ */
 const handleCache = async () => {
-  const res = getData();
+  const res = cacheManager.getData();
   await cacheManager.precacheResources(res);
-  await self.clients.claim();
 };
 
-// activate 阶段只做预缓存资源
-self.addEventListener('activate', (_event) => {
-  handleCache();
+// activate 阶段清理旧缓存并接管页面
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    (async () => {
+      await handleClear();
+      await self.clients.claim();
+    })(),
+  );
 });
 
 // 拦截网络请求
