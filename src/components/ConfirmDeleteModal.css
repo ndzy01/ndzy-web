@@ -1,0 +1,356 @@
+/* ConfirmDeleteModal 组件样式 - 使用自定义类名前缀避免全局覆盖 */
+
+/* confirm-delete-dialog 样式 */
+.confirm-delete-dialog {
+  position: relative;
+  width: auto;
+  margin: 10px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border: 1px solid #fecaca;
+}
+
+.confirm-delete-dialog-wrap {
+  position: fixed;
+  overflow: auto;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1050;
+  -webkit-overflow-scrolling: touch;
+  outline: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.confirm-delete-dialog-header {
+  padding: 20px 24px 16px 24px;
+  border-bottom: 1px solid #fecaca;
+  background: #fef2f2;
+  border-radius: 12px 12px 0 0;
+}
+
+.confirm-delete-dialog-title {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.5;
+  font-weight: bold;
+  color: #dc2626;
+}
+
+.confirm-delete-dialog-body {
+  padding: 0;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.confirm-delete-dialog-close {
+  cursor: pointer;
+  border: 0;
+  background: transparent;
+  font-size: 20px;
+  position: absolute;
+  right: 20px;
+  top: 16px;
+  font-weight: 400;
+  line-height: 1;
+  color: #dc2626;
+  text-shadow: none;
+  opacity: 1;
+  text-decoration: none;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.confirm-delete-dialog-close:disabled {
+  pointer-events: none;
+}
+
+.confirm-delete-dialog-close:hover {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  opacity: 1;
+  text-decoration: none;
+}
+
+.confirm-delete-dialog-mask {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  height: 100%;
+  z-index: 1050;
+}
+
+.confirm-delete-dialog-mask-hidden {
+  display: none;
+}
+
+/* 确认删除内容样式 */
+.confirm-delete-container {
+  padding: 24px;
+}
+
+.confirm-delete-content {
+  margin-bottom: 24px;
+}
+
+.confirm-delete-message {
+  font-size: 16px;
+  color: #374151;
+  margin: 0 0 20px 0;
+  text-align: center;
+}
+
+.confirm-delete-todo-info {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.todo-info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.todo-info-item:last-child {
+  margin-bottom: 0;
+}
+
+.todo-info-item strong {
+  color: #374151;
+  font-weight: 600;
+  min-width: 60px;
+}
+
+.todo-info-item span {
+  color: #6b7280;
+  flex: 1;
+  word-break: break-word;
+}
+
+.confirm-delete-warning {
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 14px;
+  color: #92400e;
+  text-align: center;
+}
+
+.confirm-delete-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.confirm-delete-button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.confirm-delete-button-cancel {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.confirm-delete-button-cancel:hover:not(:disabled) {
+  background-color: #e5e7eb;
+}
+
+.confirm-delete-button-danger {
+  background-color: #dc2626;
+  color: white;
+  min-width: 120px;
+}
+
+.confirm-delete-button-danger:hover:not(:disabled) {
+  background-color: #b91c1c;
+}
+
+.confirm-delete-button-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+  .confirm-delete-container {
+    padding: 16px;
+  }
+  
+  .confirm-delete-buttons {
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+  
+  .confirm-delete-button {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .todo-info-item {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .todo-info-item strong {
+    min-width: auto;
+  }
+}
+
+/* 动画效果 */
+.confirm-delete-dialog-zoom-enter,
+.confirm-delete-dialog-zoom-appear {
+  opacity: 0;
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.08, 0.82, 0.17, 1);
+  animation-play-state: paused;
+}
+
+.confirm-delete-dialog-zoom-leave {
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.6, 0.04, 0.98, 0.34);
+  animation-play-state: paused;
+}
+
+.confirm-delete-dialog-zoom-enter.confirm-delete-dialog-zoom-enter-active,
+.confirm-delete-dialog-zoom-appear.confirm-delete-dialog-zoom-appear-active {
+  animation-name: confirmDeleteDialogZoomIn;
+  animation-play-state: running;
+}
+
+.confirm-delete-dialog-zoom-leave.confirm-delete-dialog-zoom-leave-active {
+  animation-name: confirmDeleteDialogZoomOut;
+  animation-play-state: running;
+}
+
+@keyframes confirmDeleteDialogZoomIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes confirmDeleteDialogZoomOut {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+.confirm-delete-dialog-fade-enter,
+.confirm-delete-dialog-fade-appear {
+  opacity: 0;
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.55, 0, 0.55, 0.2);
+  animation-play-state: paused;
+}
+
+.confirm-delete-dialog-fade-leave {
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.55, 0, 0.55, 0.2);
+  animation-play-state: paused;
+}
+
+.confirm-delete-dialog-fade-enter.confirm-delete-dialog-fade-enter-active,
+.confirm-delete-dialog-fade-appear.confirm-delete-dialog-fade-appear-active {
+  animation-name: confirmDeleteDialogFadeIn;
+  animation-play-state: running;
+}
+
+.confirm-delete-dialog-fade-leave.confirm-delete-dialog-fade-leave-active {
+  animation-name: confirmDeleteDialogFadeOut;
+  animation-play-state: running;
+}
+
+@keyframes confirmDeleteDialogFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes confirmDeleteDialogFadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* 响应式设计 */
+@media (min-width: 768px) {
+  .confirm-delete-dialog {
+    width: 420px;
+    margin: 30px auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .confirm-delete-dialog {
+    width: 95vw;
+    max-width: 95vw;
+    margin: 10px;
+  }
+  
+  .confirm-delete-dialog-wrap {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  .confirm-delete-dialog-wrap {
+    align-items: flex-start;
+    padding-top: 20px;
+  }
+  
+  .confirm-delete-dialog-body {
+    max-height: 75vh;
+  }
+}
+
+/* 横屏模式优化 */
+@media (max-height: 500px) and (orientation: landscape) {
+  .confirm-delete-dialog-wrap {
+    align-items: flex-start;
+    padding-top: 10px;
+  }
+  
+  .confirm-delete-dialog-body {
+    max-height: 60vh;
+  }
+}

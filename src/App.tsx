@@ -1,77 +1,41 @@
-import { useSetState } from 'ahooks';
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
 import './App.css';
-import LiveChat from './components/LiveChat';
-import WorkerDemo from './components/worker-demo';
-import LiveChat1 from './components/LiveChat1';
-import Dialog from 'rc-dialog';
-import 'rc-dialog/assets/index.css';
 
-interface State {
-  showLiveChat: boolean;
-  showLiveChat1: boolean;
-  showWorkerDemo: boolean;
-  openDialog: boolean;
-}
-const App = () => {
-  const [state, setState] = useSetState<State>({
-    showLiveChat: false,
-    showLiveChat1: false,
-    showWorkerDemo: false,
-    openDialog: false,
-  });
-  const handleClick = (key: keyof State) => {
-    setState({ [key]: !state[key] } as Pick<State, keyof State>);
-  };
-  const handleText = (key: keyof State) => {
-    return state[key] ? '展示中' : '已隐藏';
-  };
+// 导入页面组件
+import HomePage from './pages/HomePage';
+import LiveChatPage from './pages/LiveChatPage';
+import LiveChat1Page from './pages/LiveChat1Page';
+import WorkerDemoPage from './pages/WorkerDemoPage';
+import TodoListPage from './pages/TodoListPage';
 
+// 导入通用组件
+import Navigation from './components/Navigation';
+
+const App: React.FC = () => {
   return (
-    <>
-      <div
-        style={{
-          padding: 16,
-          display: 'flex',
-          gap: 8,
-          '--border-width': '8px',
-          '--border-radius': '24px',
-          height: 36,
-        }}
-        className="border-box"
-      >
-        {(Object.keys(state) as Array<keyof State>).map((k, i) => (
-          <button key={i} onClick={() => handleClick(k)}>
-            {k} {handleText(k)}
-          </button>
-        ))}
-      </div>
-
-      {state.showLiveChat && <LiveChat />}
-      {state.showLiveChat1 && <LiveChat1 />}
-      {state.showWorkerDemo && <WorkerDemo />}
-      <button onClick={() => setState({ openDialog: true })}>打开对话框</button>
-      {state.openDialog && (
-        <Dialog
-          prefixCls="lr-dialog"
-          title={'111'}
-          onClose={() => setState({ openDialog: false })}
-          visible={state.openDialog}
-        >
-          <p>first dialog</p>
-        </Dialog>
-      )}
-
-      <button
-        onClick={() => {
-          navigator.serviceWorker.controller?.postMessage({
-            type: 'PRECACHE_RESOURCES',
-            data: {},
-          });
-        }}
-      >
-        点击我
-      </button>
-    </>
+    <div style={{ minHeight: '100vh', backgroundColor: '#f8f9fa' }}>
+      <Navigation />
+      
+      <main>
+        <Routes>
+          {/* 所有路由都是公开的 */}
+          <Route path="/" element={<HomePage />} />
+          <Route path="/live-chat" element={<LiveChatPage />} />
+          <Route path="/live-chat1" element={<LiveChat1Page />} />
+          <Route path="/worker-demo" element={<WorkerDemoPage />} />
+          <Route path="/todo" element={<TodoListPage />} />
+          
+          {/* 404 页面 */}
+          <Route path="*" element={
+            <div style={{ padding: '40px', textAlign: 'center' }}>
+              <h1>404 - 页面未找到</h1>
+              <p>您访问的页面不存在</p>
+            </div>
+          } />
+        </Routes>
+      </main>
+    </div>
   );
 };
 

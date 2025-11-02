@@ -1,0 +1,407 @@
+/* TodoModal 组件样式 - 使用自定义类名前缀避免全局覆盖 */
+
+/* todo-dialog 基础样式 */
+.todo-dialog {
+  position: relative;
+  width: auto;
+  margin: 10px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e5e7eb;
+}
+
+.todo-dialog-wrap {
+  position: fixed;
+  overflow: auto;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1050;
+  -webkit-overflow-scrolling: touch;
+  outline: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.todo-dialog-title {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.5;
+  font-weight: bold;
+  color: #1f2937;
+}
+
+.todo-dialog-header {
+  padding: 20px 24px 16px 24px;
+  border-radius: 12px 12px 0 0;
+  background: white;
+  color: #1f2937;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.todo-dialog-body {
+  padding: 0;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.todo-dialog-close {
+  cursor: pointer;
+  border: 0;
+  background: transparent;
+  font-size: 20px;
+  position: absolute;
+  right: 20px;
+  top: 16px;
+  font-weight: 400;
+  line-height: 1;
+  color: #6b7280;
+  text-shadow: none;
+  opacity: 1;
+  text-decoration: none;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.todo-dialog-close:disabled {
+  pointer-events: none;
+}
+
+.todo-dialog-close:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+  opacity: 1;
+  text-decoration: none;
+}
+
+.todo-dialog-mask {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  height: 100%;
+  z-index: 1050;
+}
+
+.todo-dialog-mask-hidden {
+  display: none;
+}
+
+/* 动画效果 - 参考 App.css 的动画结构 */
+.todo-dialog-zoom-enter,
+.todo-dialog-zoom-appear {
+  opacity: 0;
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.08, 0.82, 0.17, 1);
+  animation-play-state: paused;
+}
+
+.todo-dialog-zoom-leave {
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.6, 0.04, 0.98, 0.34);
+  animation-play-state: paused;
+}
+
+.todo-dialog-zoom-enter.todo-dialog-zoom-enter-active,
+.todo-dialog-zoom-appear.todo-dialog-zoom-appear-active {
+  animation-name: todoDialogZoomIn;
+  animation-play-state: running;
+}
+
+.todo-dialog-zoom-leave.todo-dialog-zoom-leave-active {
+  animation-name: todoDialogZoomOut;
+  animation-play-state: running;
+}
+
+@keyframes todoDialogZoomIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes todoDialogZoomOut {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+.todo-dialog-fade-enter,
+.todo-dialog-fade-appear {
+  opacity: 0;
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.55, 0, 0.55, 0.2);
+  animation-play-state: paused;
+}
+
+.todo-dialog-fade-leave {
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.55, 0, 0.55, 0.2);
+  animation-play-state: paused;
+}
+
+.todo-dialog-fade-enter.todo-dialog-fade-enter-active,
+.todo-dialog-fade-appear.todo-dialog-fade-appear-active {
+  animation-name: todoDialogFadeIn;
+  animation-play-state: running;
+}
+
+.todo-dialog-fade-leave.todo-dialog-fade-leave-active {
+  animation-name: todoDialogFadeOut;
+  animation-play-state: running;
+}
+
+@keyframes todoDialogFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes todoDialogFadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* 表单内容样式 */
+.todo-form-container {
+  padding: 24px;
+}
+
+.todo-form-field {
+  margin-bottom: 20px;
+}
+
+.todo-form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #374151;
+  font-size: 14px;
+}
+
+.todo-form-required {
+  color: #ef4444;
+}
+
+.todo-form-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.todo-form-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.todo-form-textarea {
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+}
+
+.todo-form-select {
+  background-color: white;
+  cursor: pointer;
+}
+
+.todo-form-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.todo-form-row-item {
+  flex: 1;
+  min-width: 0;
+}
+
+.todo-error-message {
+  color: #ef4444;
+  background-color: #fef2f2;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  border: 1px solid #fecaca;
+}
+
+.todo-button-group {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+  flex-wrap: wrap;
+}
+
+.todo-button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.todo-button-secondary {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.todo-button-secondary:hover:not(:disabled) {
+  background-color: #e5e7eb;
+}
+
+.todo-button-primary {
+  background-color: #3b82f6;
+  color: white;
+  min-width: 100px;
+}
+
+.todo-button-primary:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.todo-button-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.todo-button-loading {
+  background-color: #9ca3af;
+}
+
+/* 响应式设计 - 参考 App.css 结构 */
+@media (min-width: 768px) {
+  .todo-dialog {
+    width: 520px;
+    margin: 30px auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .todo-dialog {
+    width: 95vw;
+    max-width: 95vw;
+    margin: 10px;
+  }
+  
+  .todo-dialog-wrap {
+    padding: 12px;
+  }
+  
+  .todo-dialog-header {
+    padding: 16px 20px 12px 20px;
+  }
+  
+  .todo-dialog-title {
+    font-size: 18px;
+  }
+  
+  .todo-dialog-close {
+    top: 12px;
+    right: 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .todo-dialog-wrap {
+    align-items: flex-start;
+    padding-top: 20px;
+  }
+  
+  .todo-dialog-body {
+    max-height: 75vh;
+  }
+  
+  .todo-form-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .todo-form-row-item {
+    width: 100%;
+    min-width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .todo-dialog-wrap {
+    padding: 8px;
+    padding-top: 16px;
+  }
+  
+  .todo-dialog {
+    border-radius: 8px;
+    margin: 5px;
+  }
+  
+  .todo-dialog-header {
+    padding: 12px 16px 8px 16px;
+    border-radius: 8px 8px 0 0;
+  }
+  
+  .todo-dialog-title {
+    font-size: 16px;
+  }
+  
+  .todo-dialog-close {
+    top: 8px;
+    right: 12px;
+  }
+  
+  .todo-button-group {
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+  
+  .todo-button-group .todo-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* 横屏模式优化 */
+@media (max-height: 500px) and (orientation: landscape) {
+  .todo-dialog-wrap {
+    align-items: flex-start;
+    padding-top: 10px;
+  }
+  
+  .todo-dialog-body {
+    max-height: 60vh;
+  }
+}
