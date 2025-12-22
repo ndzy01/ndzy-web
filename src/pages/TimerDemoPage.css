@@ -1,0 +1,639 @@
+.timer-demo-page {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: calc(100vh - 60px);
+  background: #f8f9fa;
+}
+
+.container h1 {
+  color: #333;
+  margin-bottom: 10px;
+  font-size: clamp(24px, 5vw, 32px);
+}
+
+.description {
+  color: #666;
+  font-size: clamp(13px, 2.5vw, 14px);
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.timer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.timer-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 2px solid transparent;
+  transition: all 0.3s;
+}
+
+.timer-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.timer-card.raf {
+  border-color: #667eea;
+}
+
+.timer-card.idle {
+  border-color: #ffc107;
+}
+
+.timer-card.timeout {
+  border-color: #6c757d;
+}
+
+.timer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.timer-header h2 {
+  font-size: 18px;
+  color: #333;
+  margin: 0;
+}
+
+.timer-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.timer-badge.idle-badge {
+  background: #ffc107;
+  color: #000;
+}
+
+.timer-badge.timeout-badge {
+  background: #6c757d;
+  color: white;
+}
+
+.timer-display {
+  text-align: center;
+  padding: 30px 20px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.time-value {
+  font-size: 36px;
+  font-weight: 700;
+  color: #333;
+  font-family: 'Courier New', monospace;
+  margin-bottom: 8px;
+}
+
+.time-ms {
+  font-size: 14px;
+  color: #666;
+  font-family: 'Courier New', monospace;
+}
+
+.timer-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.timer-controls button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 40px;
+}
+
+.btn-start {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-start:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.btn-start:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-stop {
+  background: #dc3545;
+  color: white;
+}
+
+.btn-stop:hover:not(:disabled) {
+  background: #c82333;
+  transform: translateY(-1px);
+}
+
+.btn-stop:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-reset {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-reset:hover {
+  background: #5a6268;
+  transform: translateY(-1px);
+}
+
+.timer-info {
+  border-top: 1px solid #e9ecef;
+  padding-top: 16px;
+}
+
+.timer-info h3 {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.timer-info ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.timer-info li {
+  font-size: 13px;
+  color: #666;
+  padding: 4px 0;
+  padding-left: 20px;
+  position: relative;
+}
+
+.timer-info li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #28a745;
+  font-weight: bold;
+}
+
+.comparison-section,
+.usage-section {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+}
+
+.comparison-section h2,
+.usage-section h2 {
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.comparison-table th,
+.comparison-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.comparison-table th {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.comparison-table td {
+  font-size: 13px;
+  color: #666;
+}
+
+.comparison-table .good {
+  color: #28a745;
+  font-weight: 500;
+}
+
+.comparison-table .medium {
+  color: #ffc107;
+  font-weight: 500;
+}
+
+.comparison-table .bad {
+  color: #dc3545;
+  font-weight: 500;
+}
+
+.usage-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.usage-card {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+}
+
+.usage-card h3 {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.usage-card p {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.usage-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.usage-card li {
+  font-size: 13px;
+  color: #666;
+  padding: 4px 0;
+  padding-left: 16px;
+  position: relative;
+}
+
+.usage-card li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #667eea;
+  font-weight: bold;
+}
+
+.usage-card li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #667eea;
+  font-weight: bold;
+}
+
+/* 倒计时部分 */
+.countdown-section {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 40px;
+}
+
+.countdown-section h2 {
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.countdown-description {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.countdown-settings {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.countdown-settings label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.countdown-settings input[type="number"] {
+  width: 100px;
+  padding: 8px 12px;
+  border: 2px solid #e9ecef;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  transition: border-color 0.2s;
+}
+
+.countdown-settings input[type="number"]:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.countdown-settings input[type="number"]:disabled {
+  background: #e9ecef;
+  cursor: not-allowed;
+}
+
+.countdown-master-controls {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.countdown-master-controls button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-start-all {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  flex: 1;
+  min-width: 200px;
+}
+
+.btn-start-all:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-start-all:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-stop-all {
+  background: #dc3545;
+  color: white;
+}
+
+.btn-stop-all:hover:not(:disabled) {
+  background: #c82333;
+  transform: translateY(-2px);
+}
+
+.btn-stop-all:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-reset-all {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-reset-all:hover {
+  background: #5a6268;
+  transform: translateY(-2px);
+}
+
+.countdown-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.countdown-card {
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-radius: 12px;
+  padding: 20px;
+  border: 2px solid transparent;
+  transition: all 0.3s;
+}
+
+.countdown-card.raf {
+  border-color: #667eea;
+}
+
+.countdown-card.idle {
+  border-color: #ffc107;
+}
+
+.countdown-card.timeout {
+  border-color: #6c757d;
+}
+
+.countdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.countdown-header h3 {
+  font-size: 16px;
+  color: #333;
+  margin: 0;
+}
+
+.countdown-status {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #e9ecef;
+  color: #666;
+}
+
+.countdown-status.running {
+  background: #28a745;
+  color: white;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.countdown-status.paused {
+  background: #ffc107;
+  color: #000;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.countdown-display {
+  text-align: center;
+  padding: 24px;
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.countdown-time {
+  font-size: 32px;
+  font-weight: 700;
+  color: #333;
+  font-family: 'Courier New', monospace;
+  margin-bottom: 8px;
+  letter-spacing: 2px;
+}
+
+.countdown-ms {
+  font-size: 13px;
+  color: #666;
+  font-family: 'Courier New', monospace;
+}
+
+.countdown-progress {
+  height: 8px;
+  background: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.countdown-progress-bar {
+  height: 100%;
+  transition: width 0.1s linear;
+  border-radius: 4px;
+}
+
+.raf-bar {
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+}
+
+.idle-bar {
+  background: #ffc107;
+}
+
+.timeout-bar {
+  background: #6c757d;
+}
+
+.countdown-note {
+  background: #fff3cd;
+  border-left: 4px solid #ffc107;
+  padding: 16px;
+  border-radius: 4px;
+}
+
+.countdown-note h4 {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.countdown-note ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.countdown-note li {
+  font-size: 13px;
+  color: #666;
+  padding: 4px 0;
+}
+
+.countdown-note strong {
+  color: #333;
+  font-weight: 600;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .timer-demo-page {
+    padding: 12px;
+  }
+
+  .timer-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .timer-card {
+    padding: 20px;
+  }
+
+  .time-value {
+    font-size: 28px;
+  }
+
+  .comparison-table {
+    font-size: 12px;
+  }
+
+  .comparison-table th,
+  .comparison-table td {
+    padding: 8px 4px;
+  }
+
+  .usage-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .countdown-master-controls {
+    flex-direction: column;
+  }
+
+  .btn-start-all {
+    min-width: auto;
+  }
+
+  .countdown-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .countdown-time {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .timer-demo-page {
+    padding: 10px;
+  }
+
+  .timer-controls {
+    flex-direction: column;
+  }
+
+  .timer-controls button {
+    width: 100%;
+  }
+
+  .comparison-section,
+  .usage-section {
+    padding: 16px;
+  }
+}

@@ -1,7 +1,6 @@
 body {
   margin: 0;
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-  padding: 16px;
 }
 
 .border-box {
@@ -9,7 +8,11 @@ body {
   border-radius: var(--border-radius, 16px);
   background-clip: padding-box, border-box;
   background-origin: padding-box, border-box;
-  background-image: var(--background-image, linear-gradient(to right, #222, #222), linear-gradient(90deg, #8F41E9, #578AEF));
+  background-image: var(
+    --background-image,
+    linear-gradient(to right, #222, #222),
+    linear-gradient(90deg, #8f41e9, #578aef)
+  );
 }
 
 .lr-dialog {

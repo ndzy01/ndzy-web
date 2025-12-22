@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import './Navigation.css';
 
 const Navigation: React.FC = () => {
   const location = useLocation();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const navItems = [
     { path: '/', label: '首页', icon: '🏠' },
@@ -10,91 +12,129 @@ const Navigation: React.FC = () => {
     { path: '/live-chat1', label: 'Live Chat 1', icon: '💬' },
     { path: '/worker-demo', label: 'Worker Demo', icon: '👷' },
     { path: '/todo', label: 'Todo List', icon: '✅' },
+    { path: '/device-info', label: 'Device Info', icon: '🔍' },
+    { path: '/idle-callback', label: 'Idle Callback', icon: '⏱️' },
+    { path: '/animation-frame', label: 'Animation Frame', icon: '🎬' },
+    { path: '/timer-demo', label: '定时器对比', icon: '⏰' },
+    { path: '/raf-timer-demo', label: 'RAF Timer Hook', icon: '⚡' },
   ];
 
-  return (
-    <nav style={{
-      backgroundColor: '#fff',
-      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-      padding: '0 20px',
-      position: 'sticky',
-      top: 0,
-      zIndex: 1000
-    }}>
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        maxWidth: '1200px',
-        margin: '0 auto',
-        height: '60px'
-      }}>
-        {/* Logo */}
-        <Link to="/" style={{
-          textDecoration: 'none',
-          fontSize: '24px',
-          fontWeight: 'bold',
-          color: '#333'
-        }}>
-          NDZY Web
-        </Link>
+  const toggleDrawer = () => {
+    setIsDrawerOpen(!isDrawerOpen);
+  };
 
-        {/* Navigation Items */}
-        <div style={{
-          display: 'flex',
-          gap: '20px',
-          alignItems: 'center'
-        }}>
-          {navItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              style={{
-                textDecoration: 'none',
-                padding: '8px 16px',
-                borderRadius: '6px',
-                color: location.pathname === item.path ? '#007bff' : '#666',
-                backgroundColor: location.pathname === item.path ? '#e3f2fd' : 'transparent',
-                transition: 'all 0.2s',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
+  const closeDrawer = () => {
+    setIsDrawerOpen(false);
+  };
+
+  // 禁止背景滚动
+  useEffect(() => {
+    if (isDrawerOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isDrawerOpen]);
+
+  return (
+    <>
+      <nav className="navigation">
+        <div className="nav-container">
+          {/* Logo */}
+          <Link to="/" className="nav-logo">
+            NDZY Web
+          </Link>
+
+          {/* Desktop Navigation Items */}
+          <div className="nav-items">
+            {navItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`nav-link ${location.pathname === item.path ? 'active' : ''}`}
+              >
+                <span className="nav-link-icon">{item.icon}</span>
+                <span className="nav-link-text">{item.label}</span>
+              </Link>
+            ))}
+          </div>
+
+          {/* Desktop GitHub Link */}
+          <div className="nav-actions">
+            <a
+              href="https://github.com/ndzy01"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="github-link"
             >
-              <span>{item.icon}</span>
-              <span>{item.label}</span>
-            </Link>
-          ))}
+              <span>⭐</span>
+              <span>GitHub</span>
+            </a>
+          </div>
+
+          {/* Mobile Menu Toggle Button */}
+          <button
+            className="menu-toggle"
+            onClick={toggleDrawer}
+            aria-label="Toggle menu"
+          >
+            ☰
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile Drawer Overlay */}
+      <div
+        className={`drawer-overlay ${isDrawerOpen ? 'open' : ''}`}
+        onClick={closeDrawer}
+      />
+
+      {/* Mobile Drawer */}
+      <div className={`drawer ${isDrawerOpen ? 'open' : ''}`}>
+        <div className="drawer-header">
+          <h2 className="drawer-title">NDZY Web</h2>
+          <button
+            className="drawer-close"
+            onClick={closeDrawer}
+            aria-label="Close menu"
+          >
+            ✕
+          </button>
         </div>
 
-        {/* GitHub Link */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '15px'
-        }}>
+        <div className="drawer-content">
+          <div className="drawer-nav-items">
+            {navItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`drawer-nav-link ${location.pathname === item.path ? 'active' : ''}`}
+                onClick={closeDrawer}
+              >
+                <span className="drawer-nav-link-icon">{item.icon}</span>
+                <span className="drawer-nav-link-text">{item.label}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <div className="drawer-footer">
           <a
             href="https://github.com/ndzy01"
             target="_blank"
             rel="noopener noreferrer"
-            style={{
-              padding: '8px 16px',
-              backgroundColor: '#24292e',
-              color: 'white',
-              textDecoration: 'none',
-              borderRadius: '4px',
-              fontSize: '14px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}
+            className="drawer-github-link"
+            onClick={closeDrawer}
           >
             <span>⭐</span>
-            GitHub
+            <span>Star on GitHub</span>
           </a>
         </div>
       </div>
-    </nav>
+    </>
   );
 };
 

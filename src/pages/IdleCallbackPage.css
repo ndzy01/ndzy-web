@@ -1,0 +1,295 @@
+.idle-callback-page {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: calc(100vh - 60px);
+  background: #f8f9fa;
+}
+
+.container h1 {
+  color: #333;
+  margin-bottom: 10px;
+  font-size: clamp(24px, 5vw, 32px);
+}
+
+.description {
+  color: #666;
+  font-size: clamp(13px, 2.5vw, 14px);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-height: 44px;
+  touch-action: manipulation;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-primary:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.task-list,
+.log-panel {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.task-list h2,
+.log-panel h2 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  background: #f8f9fa;
+  transition: all 0.3s;
+  gap: 10px;
+}
+
+.task-item.pending {
+  background: #fff3cd;
+  border-left: 4px solid #ffc107;
+}
+
+.task-item.processing {
+  background: #cfe2ff;
+  border-left: 4px solid #0d6efd;
+  animation: pulse 1s infinite;
+}
+
+.task-item.completed {
+  background: #d1e7dd;
+  border-left: 4px solid #198754;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.task-name {
+  font-weight: 500;
+  color: #333;
+}
+
+.status-badge {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.status-badge.pending {
+  background: #ffc107;
+  color: #000;
+}
+
+.status-badge.processing {
+  background: #0d6efd;
+  color: white;
+}
+
+.status-badge.completed {
+  background: #198754;
+  color: white;
+}
+
+.log-panel {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.log-content {
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+}
+
+.empty-log {
+  color: #999;
+  text-align: center;
+  padding: 20px;
+}
+
+.log-entry {
+  padding: 6px;
+  margin-bottom: 4px;
+  background: #f8f9fa;
+  border-radius: 4px;
+  color: #333;
+}
+
+.info-section {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.info-section h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.info-section ul {
+  list-style-position: inside;
+  color: #666;
+  line-height: 1.8;
+}
+
+/* 平板适配 */
+@media (max-width: 992px) {
+  .content-grid {
+    gap: 15px;
+  }
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .idle-callback-page {
+    padding: 12px;
+  }
+
+  .content-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .controls {
+    gap: 12px;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    padding: 14px 24px;
+  }
+
+  .task-list,
+  .log-panel {
+    padding: 16px;
+  }
+
+  .task-item {
+    padding: 12px;
+  }
+
+  .log-panel {
+    max-height: 300px;
+  }
+
+  .log-content {
+    font-size: 11px;
+  }
+}
+
+/* 小屏幕手机适配 */
+@media (max-width: 480px) {
+  .idle-callback-page {
+    padding: 10px;
+  }
+
+  .container h1 {
+    font-size: 22px;
+  }
+
+  .description {
+    font-size: 13px;
+  }
+
+  .task-list,
+  .log-panel {
+    padding: 12px;
+  }
+
+  .task-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .status-badge {
+    align-self: flex-end;
+  }
+
+  .log-panel {
+    max-height: 250px;
+  }
+
+  .info-section {
+    padding: 15px;
+  }
+
+  .info-section ul {
+    font-size: 13px;
+  }
+}

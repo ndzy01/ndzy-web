@@ -1,0 +1,500 @@
+.raf-timer-demo-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem 0;
+}
+
+.raf-timer-demo-page .container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* 页面头部 */
+.page-header {
+  text-align: center;
+  color: white;
+  margin-bottom: 3rem;
+}
+
+.page-header h1 {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.page-header .subtitle {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  font-weight: 300;
+}
+
+/* 演示卡片网格 */
+.demo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+/* 卡片基础样式 */
+.demo-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.demo-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.demo-card.highlight {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  grid-column: span 2;
+}
+
+.demo-card.highlight .card-info code {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.demo-card.log-panel {
+  grid-column: span 2;
+  background: #1e1e1e;
+  color: #d4d4d4;
+}
+
+/* 卡片头部 */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.demo-card.highlight .card-header h3 {
+  color: white;
+}
+
+/* 徽章 */
+.badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.frame-badge {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+}
+
+.second-badge {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+  color: white;
+}
+
+.custom-badge {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  color: white;
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: #e0e0e0;
+  color: #666;
+}
+
+.status-badge.running {
+  background: linear-gradient(135deg, #11998e, #38ef7d);
+  color: white;
+  animation: pulse 2s infinite;
+}
+
+.status-badge.paused {
+  background: #ffd93d;
+  color: #333;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* 定时器显示 */
+.timer-display {
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-weight: 700;
+  text-align: center;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: #f5f5f5;
+  border-radius: 12px;
+}
+
+.timer-display.large {
+  font-size: 2.5rem;
+}
+
+.timer-display.xlarge {
+  font-size: 4rem;
+}
+
+.demo-card.highlight .timer-display {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.timer-display.countdown {
+  letter-spacing: 0.1em;
+}
+
+/* 进度条 */
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 1.5rem 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #11998e, #38ef7d);
+  border-radius: 4px;
+}
+
+/* 时长控制 */
+.duration-control {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.duration-control label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #666;
+}
+
+.duration-control input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.duration-control input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+/* 按钮样式 */
+.card-controls {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.btn {
+  flex: 1;
+  min-width: 80px;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-start {
+  background: linear-gradient(135deg, #11998e, #38ef7d);
+  color: white;
+}
+
+.btn-start:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(17, 153, 142, 0.3);
+}
+
+.btn-stop {
+  background: linear-gradient(135deg, #ee0979, #ff6a00);
+  color: white;
+}
+
+.btn-stop:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(238, 9, 121, 0.3);
+}
+
+.btn-reset {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.btn-reset:hover:not(:disabled) {
+  background: #e0e0e0;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-warning {
+  background: #ffd93d;
+  color: #333;
+}
+
+.btn-warning:hover:not(:disabled) {
+  background: #ffc107;
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #11998e, #38ef7d);
+  color: white;
+}
+
+.btn-success:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(17, 153, 142, 0.3);
+}
+
+.btn-sm {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  min-width: auto;
+}
+
+.btn-clear {
+  background: #666;
+  color: white;
+}
+
+.btn-clear:hover {
+  background: #555;
+}
+
+/* 卡片信息 */
+.card-info {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.demo-card.highlight .card-info {
+  border-top-color: rgba(255, 255, 255, 0.3);
+}
+
+.card-info code {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  background: #f5f5f5;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: #667eea;
+  margin-bottom: 0.5rem;
+}
+
+.card-info p {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.demo-card.highlight .card-info p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* 日志面板 */
+.log-container {
+  max-height: 300px;
+  overflow-y: auto;
+  background: #252526;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: 0.85rem;
+}
+
+.log-item {
+  padding: 0.5rem;
+  margin-bottom: 0.25rem;
+  background: #2d2d30;
+  border-left: 3px solid #667eea;
+  border-radius: 4px;
+  color: #d4d4d4;
+}
+
+.log-empty {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+  font-style: italic;
+}
+
+.log-panel .card-info {
+  border-top-color: #3e3e42;
+  color: #d4d4d4;
+}
+
+/* 代码示例 */
+.code-examples {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.code-examples h2 {
+  color: #333;
+  margin-bottom: 2rem;
+}
+
+.code-block {
+  margin-bottom: 2rem;
+}
+
+.code-block h4 {
+  color: #667eea;
+  margin-bottom: 1rem;
+}
+
+.code-block pre {
+  background: #1e1e1e;
+  border-radius: 8px;
+  padding: 1.5rem;
+  overflow-x: auto;
+  margin: 0;
+}
+
+.code-block code {
+  color: #d4d4d4;
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+/* API 文档 */
+.api-docs {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.api-docs h2 {
+  color: #333;
+  margin-bottom: 2rem;
+}
+
+.api-table {
+  margin-bottom: 2rem;
+}
+
+.api-table h4 {
+  color: #667eea;
+  margin-bottom: 1rem;
+}
+
+.api-table table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.api-table th {
+  background: #667eea;
+  color: white;
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+}
+
+.api-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.api-table tr:last-child td {
+  border-bottom: none;
+}
+
+.api-table code {
+  background: #f5f5f5;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: #667eea;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .raf-timer-demo-page .container {
+    padding: 0 1rem;
+  }
+
+  .page-header h1 {
+    font-size: 2rem;
+  }
+
+  .demo-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .demo-card.highlight,
+  .demo-card.log-panel {
+    grid-column: span 1;
+  }
+
+  .timer-display.xlarge {
+    font-size: 2.5rem;
+  }
+
+  .card-controls {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}

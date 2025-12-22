@@ -1,0 +1,394 @@
+.navigation {
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+  height: 60px;
+  gap: 32px;
+}
+
+.nav-logo {
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.2s;
+  letter-spacing: -0.5px;
+}
+
+.nav-logo:hover {
+  opacity: 0.8;
+}
+
+.nav-items {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  flex: 1;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 4px 0;
+}
+
+.nav-items::-webkit-scrollbar {
+  display: none;
+}
+
+.nav-link {
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: #64748b;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 500;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.nav-link:hover {
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.08);
+}
+
+.nav-link.active {
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.12);
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 12px;
+  right: 12px;
+  height: 2px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  border-radius: 2px;
+}
+
+.nav-link-icon {
+  font-size: 16px;
+}
+
+.nav-link-text {
+  display: inline;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.github-link {
+  padding: 7px 14px;
+  background: #24292f;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.github-link:hover {
+  background: #1b1f23;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.menu-toggle {
+  display: none;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #64748b;
+  font-size: 18px;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.menu-toggle:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #475569;
+}
+
+.menu-toggle:active {
+  transform: scale(0.95);
+}
+
+/* 侧边抽屉遮罩 */
+.drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9998;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.drawer-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 侧边抽屉 */
+.drawer {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 280px;
+  max-width: 85vw;
+  height: 100vh;
+  background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+  overflow-y: auto;
+  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.drawer.open {
+  right: 0;
+}
+
+.drawer-header {
+  padding: 20px;
+  border-bottom: 1px solid #e9ecef;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.drawer-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.drawer-close {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: white;
+  font-size: 20px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drawer-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+
+.drawer-content {
+  padding: 20px;
+}
+
+.drawer-nav-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.drawer-nav-link {
+  text-decoration: none;
+  padding: 14px 16px;
+  border-radius: 12px;
+  color: #333;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  background: white;
+  border: 2px solid transparent;
+}
+
+.drawer-nav-link:hover {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  border-color: #667eea;
+  transform: translateX(4px);
+}
+
+.drawer-nav-link.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.drawer-nav-link-icon {
+  font-size: 22px;
+  width: 28px;
+  text-align: center;
+}
+
+.drawer-nav-link-text {
+  flex: 1;
+}
+
+.drawer-footer {
+  padding: 20px;
+  border-top: 1px solid #e9ecef;
+  margin-top: 20px;
+}
+
+.drawer-github-link {
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #24292e 0%, #000 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 12px;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.drawer-github-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* 平板适配 */
+@media (max-width: 992px) {
+  .nav-items {
+    gap: 8px;
+  }
+
+  .nav-link {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+
+  .nav-logo {
+    font-size: 20px;
+  }
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .navigation {
+    padding: 0 15px;
+  }
+
+  .nav-container {
+    height: 60px;
+  }
+
+  .nav-logo {
+    font-size: 18px;
+  }
+
+  .menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-items {
+    display: none;
+  }
+
+  .nav-actions .github-link {
+    display: none;
+  }
+}
+
+/* 小屏幕手机适配 */
+@media (max-width: 480px) {
+  .navigation {
+    padding: 0 12px;
+  }
+
+  .nav-logo {
+    font-size: 16px;
+  }
+
+  .drawer {
+    width: 260px;
+  }
+
+  .drawer-header {
+    padding: 16px;
+  }
+
+  .drawer-title {
+    font-size: 18px;
+  }
+
+  .drawer-content {
+    padding: 16px;
+  }
+
+  .drawer-nav-link {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+}
+
+/* 横屏手机适配 */
+@media (max-width: 768px) and (orientation: landscape) {
+  .drawer {
+    width: 240px;
+  }
+
+  .drawer-header {
+    padding: 12px 16px;
+  }
+
+  .drawer-content {
+    padding: 12px 16px;
+  }
+
+  .drawer-nav-link {
+    padding: 10px 12px;
+  }
+}
