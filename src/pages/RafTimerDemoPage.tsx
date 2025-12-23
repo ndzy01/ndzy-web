@@ -1,8 +1,18 @@
 import React, { useState } from 'react';
 import { useRafTimer } from '../hooks/useRafTimer';
 import './RafTimerDemoPage.css';
+import BGM from '../../src/bgm.mp3';
+import useSound from 'use-sound';
 
 const RafTimerDemoPage: React.FC = () => {
+  const [play] = useSound(BGM, {
+    // 关键配置：强制使用 HTML5 Audio
+    // 这样浏览器会把它当作"音乐"而不是"音效"，
+    // 从而无视物理静音键。
+    html5: true,
+
+    volume: 1.0,
+  });
   const [logs, setLogs] = useState<string[]>([]);
   const [customDuration, setCustomDuration] = useState(10);
 
@@ -52,6 +62,7 @@ const RafTimerDemoPage: React.FC = () => {
     mode: 'countdown',
     duration: customDuration * 1000,
     onComplete: () => {
+      play();
       addLog(`✅ ${customDuration}秒倒计时完成`);
     },
   });
