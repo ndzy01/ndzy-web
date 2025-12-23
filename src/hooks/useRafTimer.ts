@@ -1,4 +1,11 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
+const formatTime = (ms: number) => {
+  const totalSeconds = Math.floor(ms / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+};
 
 /**
  * useRafTimer 基础配置选项
@@ -43,6 +50,8 @@ export type UseRafTimerOptions = StopwatchOptions | CountdownOptions;
 export interface UseRafTimerReturn {
   /** 当前时间值（毫秒） */
   time: number;
+  /** 格式化时间字符串（HH:MM:SS） */
+  formattedTime: string;
   /** 是否正在运行 */
   isRunning: boolean;
   /** 开始定时器（可选参数动态修改倒计时时长） */
@@ -234,8 +243,11 @@ export function useRafTimer(options: UseRafTimerOptions): UseRafTimerReturn {
     }
   }, []);
 
+  const formattedTime = useMemo(() => formatTime(time), [time]);
+
   return {
     time,
+    formattedTime,
     isRunning,
     start,
     stop,

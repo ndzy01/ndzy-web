@@ -8,12 +8,12 @@ const RafTimerDemoPage: React.FC = () => {
 
   const addLog = (message: string) => {
     const timestamp = new Date().toLocaleTimeString('zh-CN');
-    setLogs(prev => [`[${timestamp}] ${message}`, ...prev].slice(0, 10));
+    setLogs((prev) => [`[${timestamp}] ${message}`, ...prev].slice(0, 10));
   };
 
   // 示例1: 基础正计时
   const stopwatchFrame = useRafTimer({
-    mode: 'stopwatch'
+    mode: 'stopwatch',
   });
 
   // 示例2: 秒级正计时（带回调）
@@ -24,7 +24,7 @@ const RafTimerDemoPage: React.FC = () => {
       if (seconds > 0 && seconds % 10 === 0) {
         addLog(`秒级正计时已运行 ${seconds} 秒`);
       }
-    }
+    },
   });
 
   // 示例3: 活动倒计时（10分钟）
@@ -39,12 +39,12 @@ const RafTimerDemoPage: React.FC = () => {
       if (seconds === 60 || seconds === 30 || seconds === 10) {
         addLog(`⚠️ 还有 ${seconds} 秒活动开始`);
       }
-    }
+    },
   });
 
   // 示例4: 可暂停继续的定时器
   const pausableTimer = useRafTimer({
-    mode: 'stopwatch'
+    mode: 'stopwatch',
   });
 
   // 示例5: 动态时长倒计时
@@ -53,31 +53,17 @@ const RafTimerDemoPage: React.FC = () => {
     duration: customDuration * 1000,
     onComplete: () => {
       addLog(`✅ ${customDuration}秒倒计时完成`);
-    }
+    },
   });
-
-  const formatTime = (ms: number) => {
-    const totalSeconds = Math.floor(ms / 1000);
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  };
-
-  const formatCountdown = (ms: number) => {
-    const totalSeconds = Math.floor(ms / 1000);
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  };
 
   return (
     <div className="raf-timer-demo-page">
       <div className="container">
         <header className="page-header">
           <h1>⏱️ useRafTimer Hook 演示</h1>
-          <p className="subtitle">基于 requestAnimationFrame 的高精度定时器 Hook</p>
+          <p className="subtitle">
+            基于 requestAnimationFrame 的高精度定时器 Hook
+          </p>
         </header>
 
         <div className="demo-grid">
@@ -88,24 +74,24 @@ const RafTimerDemoPage: React.FC = () => {
               <span className="badge second-badge">秒级更新</span>
             </div>
             <div className="timer-display large">
-              {formatTime(stopwatchFrame.time)}
+              {stopwatchFrame.formattedTime}
             </div>
             <div className="card-controls">
-              <button 
-                onClick={() => stopwatchFrame.start()} 
+              <button
+                onClick={() => stopwatchFrame.start()}
                 disabled={stopwatchFrame.isRunning}
                 className="btn btn-start"
               >
                 开始
               </button>
-              <button 
-                onClick={() => stopwatchFrame.stop()} 
+              <button
+                onClick={() => stopwatchFrame.stop()}
                 disabled={!stopwatchFrame.isRunning}
                 className="btn btn-stop"
               >
                 停止
               </button>
-              <button 
+              <button
                 onClick={() => stopwatchFrame.reset()}
                 className="btn btn-reset"
               >
@@ -125,10 +111,10 @@ const RafTimerDemoPage: React.FC = () => {
               <span className="badge second-badge">秒级更新</span>
             </div>
             <div className="timer-display large">
-              {formatTime(stopwatchSecond.time)}
+              {stopwatchSecond.formattedTime}
             </div>
             <div className="card-controls">
-              <button 
+              <button
                 onClick={() => {
                   stopwatchSecond.start();
                   addLog('秒级正计时已启动');
@@ -138,14 +124,14 @@ const RafTimerDemoPage: React.FC = () => {
               >
                 开始
               </button>
-              <button 
-                onClick={() => stopwatchSecond.stop()} 
+              <button
+                onClick={() => stopwatchSecond.stop()}
                 disabled={!stopwatchSecond.isRunning}
                 className="btn btn-stop"
               >
                 停止
               </button>
-              <button 
+              <button
                 onClick={() => stopwatchSecond.reset()}
                 className="btn btn-reset"
               >
@@ -162,24 +148,26 @@ const RafTimerDemoPage: React.FC = () => {
           <div className="demo-card highlight">
             <div className="card-header">
               <h3>🎯 活动倒计时</h3>
-              <span className={`status-badge ${activityCountdown.isRunning ? 'running' : ''}`}>
+              <span
+                className={`status-badge ${activityCountdown.isRunning ? 'running' : ''}`}
+              >
                 {activityCountdown.isRunning ? '运行中' : '已停止'}
               </span>
             </div>
             <div className="timer-display xlarge countdown">
-              {formatCountdown(activityCountdown.time)}
+              {activityCountdown.formattedTime}
             </div>
             <div className="progress-bar">
-              <div 
+              <div
                 className="progress-fill"
-                style={{ 
+                style={{
                   width: `${(activityCountdown.time / (10 * 60 * 1000)) * 100}%`,
-                  transition: 'width 0.3s ease'
+                  transition: 'width 0.3s ease',
                 }}
               />
             </div>
             <div className="card-controls">
-              <button 
+              <button
                 onClick={() => {
                   activityCountdown.start();
                   addLog('活动倒计时开始：10分钟');
@@ -189,7 +177,7 @@ const RafTimerDemoPage: React.FC = () => {
               >
                 启动倒计时
               </button>
-              <button 
+              <button
                 onClick={() => {
                   activityCountdown.stop();
                   addLog('倒计时已暂停');
@@ -199,17 +187,19 @@ const RafTimerDemoPage: React.FC = () => {
               >
                 暂停
               </button>
-              <button 
+              <button
                 onClick={() => {
                   activityCountdown.resume();
                   addLog('倒计时已继续');
                 }}
-                disabled={activityCountdown.isRunning || activityCountdown.time === 0}
+                disabled={
+                  activityCountdown.isRunning || activityCountdown.time === 0
+                }
                 className="btn btn-success"
               >
                 继续
               </button>
-              <button 
+              <button
                 onClick={() => activityCountdown.reset()}
                 className="btn btn-reset"
               >
@@ -226,15 +216,17 @@ const RafTimerDemoPage: React.FC = () => {
           <div className="demo-card">
             <div className="card-header">
               <h3>⏯️ 暂停/继续</h3>
-              <span className={`status-badge ${pausableTimer.isRunning ? 'running' : 'paused'}`}>
+              <span
+                className={`status-badge ${pausableTimer.isRunning ? 'running' : 'paused'}`}
+              >
                 {pausableTimer.isRunning ? '运行中' : '已暂停'}
               </span>
             </div>
             <div className="timer-display large">
-              {formatTime(pausableTimer.time)}
+              {pausableTimer.formattedTime}
             </div>
             <div className="card-controls">
-              <button 
+              <button
                 onClick={() => {
                   pausableTimer.start();
                   addLog('定时器已启动');
@@ -244,17 +236,17 @@ const RafTimerDemoPage: React.FC = () => {
               >
                 开始
               </button>
-              <button 
+              <button
                 onClick={() => {
                   pausableTimer.stop();
-                  addLog(`定时器已暂停于 ${formatTime(pausableTimer.time)}`);
+                  addLog(`定时器已暂停于 ${pausableTimer.formattedTime}`);
                 }}
                 disabled={!pausableTimer.isRunning}
                 className="btn btn-warning"
               >
                 暂停
               </button>
-              <button 
+              <button
                 onClick={() => {
                   pausableTimer.resume();
                   addLog('定时器已继续');
@@ -264,7 +256,7 @@ const RafTimerDemoPage: React.FC = () => {
               >
                 继续
               </button>
-              <button 
+              <button
                 onClick={() => pausableTimer.reset()}
                 className="btn btn-reset"
               >
@@ -284,8 +276,7 @@ const RafTimerDemoPage: React.FC = () => {
               <span className="badge custom-badge">可配置</span>
             </div>
             <div className="timer-display large">
-            {formatCountdown(dynamicCountdown.time)}
-              {/* {Math.ceil(dynamicCountdown.time / 1000)}秒 */}
+              {dynamicCountdown.formattedTime}
             </div>
             <div className="duration-control">
               <label htmlFor="duration-input">设置时长（秒）：</label>
@@ -300,7 +291,7 @@ const RafTimerDemoPage: React.FC = () => {
               />
             </div>
             <div className="card-controls">
-              <button 
+              <button
                 onClick={() => {
                   dynamicCountdown.start(customDuration * 1000);
                   addLog(`启动 ${customDuration} 秒倒计时`);
@@ -310,14 +301,14 @@ const RafTimerDemoPage: React.FC = () => {
               >
                 启动
               </button>
-              <button 
-                onClick={() => dynamicCountdown.stop()} 
+              <button
+                onClick={() => dynamicCountdown.stop()}
                 disabled={!dynamicCountdown.isRunning}
                 className="btn btn-stop"
               >
                 停止
               </button>
-              <button 
+              <button
                 onClick={() => dynamicCountdown.reset()}
                 className="btn btn-reset"
               >
@@ -334,8 +325,8 @@ const RafTimerDemoPage: React.FC = () => {
           <div className="demo-card log-panel">
             <div className="card-header">
               <h3>📝 回调日志</h3>
-              <button 
-                onClick={() => setLogs([])} 
+              <button
+                onClick={() => setLogs([])}
                 className="btn btn-sm btn-clear"
               >
                 清空
@@ -361,10 +352,11 @@ const RafTimerDemoPage: React.FC = () => {
         {/* 使用示例代码 */}
         <section className="code-examples">
           <h2>💻 使用示例</h2>
-          
+
           <div className="code-block">
             <h4>基础用法 - 正计时</h4>
-            <pre><code>{`const timer = useRafTimer({
+            <pre>
+              <code>{`const timer = useRafTimer({
   mode: 'stopwatch'
 });
 
@@ -376,12 +368,14 @@ timer.reset();  // 重置
 
 // 状态
 timer.time       // 当前时间（毫秒）
-timer.isRunning  // 是否运行中`}</code></pre>
+timer.isRunning  // 是否运行中`}</code>
+            </pre>
           </div>
 
           <div className="code-block">
             <h4>倒计时 + 回调</h4>
-            <pre><code>{`const countdown = useRafTimer({
+            <pre>
+              <code>{`const countdown = useRafTimer({
   mode: 'countdown',
   duration: 10 * 60 * 1000, // 10分钟
   onComplete: () => {
@@ -394,12 +388,14 @@ timer.isRunning  // 是否运行中`}</code></pre>
       console.log('还有1分钟');
     }
   }
-});`}</code></pre>
+});`}</code>
+            </pre>
           </div>
 
           <div className="code-block">
             <h4>动态修改时长</h4>
-            <pre><code>{`// 启动时指定新的时长
+            <pre>
+              <code>{`// 启动时指定新的时长
 timer.start(customDuration * 1000);
 
 // 示例：用户输入倒计时时长
@@ -410,14 +406,15 @@ const [duration, setDuration] = useState(60);
 />
 <button onClick={() => timer.start(duration * 1000)}>
   启动
-</button>`}</code></pre>
+</button>`}</code>
+            </pre>
           </div>
         </section>
 
         {/* API 文档 */}
         <section className="api-docs">
           <h2>📚 API 文档</h2>
-          
+
           <div className="api-table">
             <h4>配置选项（UseRafTimerOptions）</h4>
             <table>
